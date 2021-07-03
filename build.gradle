@@ -14,8 +14,8 @@ sourceCompatibility = 1.8
 ext.saikuReleaseTag = 'tag-3.16'
 
 // Mondrian Version
-ext.mondrianReleaseTag = '8.3.0.0-RC'
-ext.mondrianVersion = '8.3.0.0-SNAPSHOT'
+ext.mondrianReleaseTag = '9.2.0.0-R'
+ext.mondrianVersion = '9.2.0.0-SNAPSHOT'
 
 
 /*
@@ -50,6 +50,7 @@ task mergeSources(dependsOn: [downloadSaiku, downloadSaikuQuery]) {
 
         // include saiku java sources
         copy {
+		    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             from 'saiku-query/src'
             from 'saiku/saiku-core/saiku-olap-util/src'
             from 'saiku/saiku-core/saiku-service/src'
@@ -99,13 +100,14 @@ compileJava.dependsOn mergeSources
 repositories {
     mavenCentral()
     maven {
-        url 'http://nexus.pentaho.org/content/groups/omni'
+        url 'https://nexus.pentaho.org/content/groups/omni'
     }
     maven {
-        url 'http://clojars.org/repo/'
+        url 'https://clojars.org/repo/'
     }
     maven {
         url 'http://nexus.qmino.com/content/repositories/miredot/'
+		allowInsecureProtocol = true
     }
 }
 
@@ -208,8 +210,9 @@ configurations.all {
  * Build the jar file
  */
 war {
-    archiveName 'mondrian-server.war'
-    destinationDir file('.')
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	archiveFileName = 'mondrian-server.war'
+    destinationDirectory = file('.')
 
     from 'tmp/main/webapp'
 
